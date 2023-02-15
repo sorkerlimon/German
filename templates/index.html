@@ -1,0 +1,164 @@
+<html>
+<head>
+    <title>Bootstrap Card Example</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#country").change(function() {
+                var country_id = $(this).val();
+    
+                $.ajax({
+                    url: '/get_locations/',
+                    data: {
+                        'country_id': country_id
+                    },
+                    success: function(data) {
+                        $("#location").html(data.html);
+                        $("#business_plan").html('<option value="">Select a business plan</option>');
+                        $("#value1").html('');
+                        $("#value2").html('');
+                        $("#value3").html('');
+                    }
+                });
+            });
+    
+            $("#location").change(function() {
+                var location_id = $(this).val();
+    
+                $.ajax({
+                    url: '/get_business_plans/',
+                    data: {
+                        'location_id': location_id
+                    },
+                    success: function(data) {
+                        $("#business_plan").html(data.html);
+                        $("#value1").html('');
+                        $("#value2").html('');
+                        $("#value3").html('');
+                    }
+                });
+            });
+    
+            $("#business_plan").change(function() {
+                var business_plan_id = $(this).val();
+        
+                $.ajax({
+                    url: '/get_values/',
+                    data: {
+                        'business_plan_id': business_plan_id
+                    },
+                    success: function(data) {
+                        $("#value1").html(data.value1);
+                        $("#value2").html(data.value2);
+                        $("#value3").html(data.value3);
+                    }
+                });
+            });
+    
+            $('#myform').submit(function(e) {
+                e.preventDefault();
+                var country = $('#country').val();
+                var location = $('#location').val();
+                var business_plan = $('#business_plan').val();
+                var value1 = $('#value1').text();
+                var value2 = $('#value2').text();
+                var value3 = $('#value3').text();
+    
+                $.ajax({
+                    url: '/save_data/',
+                    data: {
+                        'country': country,
+                        'location': location,
+                        'business_plan': business_plan,
+                        'value1': value1,
+                        'value2': value2,
+                        'value3': value3,
+                    },
+                    success: function(data) {
+                        alert('Data saved successfully!');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Select Country, Location and Business Plan</h5>
+            </div>
+            <div class="card-body">
+                <form id="myform">
+                    <div class="form-group">
+                        <label for="country">Country:</label>
+                        <select id="country" class="form-control">
+                            <option value="">Select a country</option>
+                            {% for country in countries %}
+                            <option value="{{ country.c_name }}">{{ country.c_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <select id="location" class="form-control">
+                            <option value="">Select a location</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="business_plan">Business Plan:</label>
+                        <select id="business_plan" class="form-control">
+                            <option value="">Select a business plan</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                          <div class="card bg-primary text-white">
+                            <div class="card-body">
+                              <h5 class="card-title">Basic</h5>
+                              <div class="form-group card-text">
+                                <label>$</label>
+                                <span id="value1"></span>
+                              </div>
+                              <a href="#" class="btn btn-light">Buy Now</a>
+                            </div>
+                          </div>
+                          
+                        </div>
+                        <div class="col-md-4">
+                          <div class="card bg-secondary text-white">
+                            <div class="card-body">
+                              <h5 class="card-title">Standard</h5>
+                              <div class="form-group card-text">
+                                <label>$</label>
+                                <span id="value2"></span>
+                            </div>
+                              <a href="#" class="btn btn-light">Buy Now</a>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="card bg-success text-white">
+                            <div class="card-body">
+                              <h5 class="card-title">Gold</h5>
+                              <div class="form-group card-text">
+                                <label>$</label>
+                                <span id="value3"></span>
+                            </div>
+                              <a href="#" class="btn btn-light">Buy Now</a>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+              
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

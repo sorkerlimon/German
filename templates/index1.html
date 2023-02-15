@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    Hello
+    <form>
+        <select name="country" id="country">
+            <option value="">--- Select a country ---</option>
+
+            {%for i in country %}
+                <option value={{i}}>{{i}}</option>
+            {%endfor%}
+        </select>
+        <select name="state" id="state">
+            <option value="">--- Select a state/location ---</option>
+
+        </select>
+
+        <select name="business" id="business">
+            <option value="">--- Select a plan ---</option>
+
+        </select>
+    </form>
+    
+    <div id="data"></div>
+    
+    <script>
+        var countrySelect = document.getElementById('country');
+        var stateSelect = document.getElementById('state');
+        var dataDiv = document.getElementById('data');
+    
+        countrySelect.addEventListener('change', function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/get_states/?country=' + countrySelect.value);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var states = response.states;
+                    stateSelect.innerHTML = '<option value="">--- Select a state/location ---</option>';
+                    for (var i = 0; i < states.length; i++) {
+                        stateSelect.innerHTML += '<option value="' + states[i] + '">' + states[i] + '</option>';
+                    }
+                }
+            };
+            xhr.send();
+        });
+    
+        stateSelect.addEventListener('change', function() {
+            var state = stateSelect.value;
+            if (state === 'Kolkata') {
+                dataDiv.innerHTML = '32, 40';
+            } else if (state === 'Mumbai') {
+                dataDiv.innerHTML = '50, 80';
+            } else if (state === 'Dhaka') {
+                dataDiv.innerHTML = '70, 90';
+            } else if (state === 'Chandpur') {
+                dataDiv.innerHTML = '10, 20';
+            } else if (state === 'Tohoku') {
+                dataDiv.innerHTML = '100, 200';
+            } else if (state === 'Kanto') {
+                dataDiv.innerHTML = '300, 400';
+            } else {
+                dataDiv.innerHTML = '';
+            }
+        });
+    </script>
+    
+    
+    
+</body>
+</html>
